@@ -1,0 +1,14 @@
+openai
+groq
+python-dotenv
+pyttsx3
+speechrecognition
+pyaudio
+vosk
+pyautogui
+psutil
+selenium
+pandas
+openpyxl
+python-docx
+reportlab
