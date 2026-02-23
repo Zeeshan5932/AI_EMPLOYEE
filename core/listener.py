@@ -35,7 +35,7 @@ def listen_command():
     with mic as source:
         recognizer.adjust_for_ambient_noise(source)
         print("Listening...")
-        audio = recognizer.listen(source)
+        audio = recognizer.listen(source, phrase_time_limit=6)
 
     try:
         text = recognizer.recognize_google(audio).lower()

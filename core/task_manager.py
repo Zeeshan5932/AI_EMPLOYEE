@@ -9,7 +9,7 @@ from modules.data_analyzer import handle_data
 from core.command_parser import parse_llm_response
 
 
-def execute_task(llm_response):
+def execute_task(llm_response, gui=None, speaker=None):
     tasks = parse_llm_response(llm_response)
 
     results = []
@@ -17,28 +17,48 @@ def execute_task(llm_response):
     for task in tasks:
         action = task.get("action")
 
+        # 🔹 1. PRE-EXECUTION RESPONSE
+        if speaker:
+            speaker(random.choice(confirmations))
+
+        if gui:
+            gui.update_status("Executing Task...")
+
+        # 🔹 2. EXECUTE TASK
         if action == "system":
-            results.append(handle_system(task))
+            result = handle_system(task)
 
         elif action == "file":
-            results.append(handle_file(task))
+            result = handle_file(task)
 
         elif action == "browser":
-            results.append(handle_browser(task))
+            result = handle_browser(task)
 
         elif action == "email":
-            results.append(handle_email(task))
+            result = handle_email(task)
 
         elif action == "document":
-            results.append(handle_document(task))
+            result = handle_document(task)
 
         elif action == "schedule":
-            results.append(handle_scheduler(task))
+            result = handle_scheduler(task)
 
         elif action == "data":
-            results.append(handle_data(task))
+            result = handle_data(task)
 
         elif action == "chat":
-            results.append(task.get("message"))
+            return task.get("message")
+
+        else:
+            result = "Task not recognized."
+
+        results.append(result)
+
+        # 🔹 3. AFTER COMPLETION
+        if speaker:
+            speaker("Task completed successfully.")
+
+        if gui:
+            gui.update_status("Task Completed")
 
     return " ".join(results)

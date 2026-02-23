@@ -9,13 +9,9 @@ def handle_browser(task):
 
     driver = webdriver.Chrome()
 
-    if task_type == "open_website":
-        url = task.get("url")
-        driver.get(url)
-        return f"Opened {url}"
-
-    elif task_type == "google_search":
+    if task_type == "google_search":
         query = task.get("query")
+
         driver.get("https://www.google.com")
         time.sleep(2)
 
@@ -23,8 +19,10 @@ def handle_browser(task):
         search_box.send_keys(query)
         search_box.send_keys(Keys.RETURN)
 
+        time.sleep(3)
+
+        driver.quit()
         return f"Searched Google for {query}"
 
-    else:
-        driver.quit()
-        return "Browser task not supported."
+    driver.quit()
+    return "Browser task not supported."

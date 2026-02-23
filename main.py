@@ -31,7 +31,7 @@ def main_loop():
         task_data = process_command(user_input)
 
         gui.update_status("Executing...")
-        result = execute_task(task_data)
+        result = execute_task(task_data, gui=gui, speaker=speak)
 
         gui.add_message("AI", result)
 
