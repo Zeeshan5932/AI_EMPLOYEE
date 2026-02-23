@@ -1,3 +1,5 @@
+import random
+
 from modules.system_control import handle_system
 from modules.file_manager import handle_file
 from modules.browser_automation import handle_browser
@@ -9,6 +11,23 @@ from modules.data_analyzer import handle_data
 from core.command_parser import parse_llm_response
 
 
+# 🔹 Smart personality responses
+confirmations = [
+    "Yes sir, executing your command.",
+    "Understood. Processing now.",
+    "Right away sir.",
+    "On it sir.",
+    "Working on your request."
+]
+
+completions = [
+    "Task completed successfully.",
+    "Your request has been fulfilled.",
+    "Execution finished.",
+    "Done sir."
+]
+
+
 def execute_task(llm_response, gui=None, speaker=None):
     tasks = parse_llm_response(llm_response)
 
@@ -17,14 +36,18 @@ def execute_task(llm_response, gui=None, speaker=None):
     for task in tasks:
         action = task.get("action")
 
-        # 🔹 1. PRE-EXECUTION RESPONSE
+        # 🔹 If normal chat, just return response
+        if action == "chat":
+            return task.get("message")
+
+        # 🔹 Pre-execution confirmation
         if speaker:
             speaker(random.choice(confirmations))
 
         if gui:
             gui.update_status("Executing Task...")
 
-        # 🔹 2. EXECUTE TASK
+        # 🔹 Execute based on action
         if action == "system":
             result = handle_system(task)
 
@@ -46,17 +69,14 @@ def execute_task(llm_response, gui=None, speaker=None):
         elif action == "data":
             result = handle_data(task)
 
-        elif action == "chat":
-            return task.get("message")
-
         else:
             result = "Task not recognized."
 
         results.append(result)
 
-        # 🔹 3. AFTER COMPLETION
+        # 🔹 Completion message
         if speaker:
-            speaker("Task completed successfully.")
+            speaker(random.choice(completions))
 
         if gui:
             gui.update_status("Task Completed")
