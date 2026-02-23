@@ -2,6 +2,12 @@ import json
 
 def parse_llm_response(response_text):
     try:
-        return json.loads(response_text)
+        data = json.loads(response_text)
+
+        if isinstance(data, list):
+            return data
+        else:
+            return [data]
+
     except:
-        return {"action": "chat", "message": response_text}
+        return [{"action": "chat", "message": response_text}]

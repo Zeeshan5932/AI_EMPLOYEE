@@ -10,33 +10,35 @@ from core.command_parser import parse_llm_response
 
 
 def execute_task(llm_response):
-    task = parse_llm_response(llm_response)
+    tasks = parse_llm_response(llm_response)
 
-    action = task.get("action")
+    results = []
 
-    if action == "system":
-        return handle_system(task)
+    for task in tasks:
+        action = task.get("action")
 
-    elif action == "file":
-        return handle_file(task)
+        if action == "system":
+            results.append(handle_system(task))
 
-    elif action == "browser":
-        return handle_browser(task)
+        elif action == "file":
+            results.append(handle_file(task))
 
-    elif action == "email":
-        return handle_email(task)
+        elif action == "browser":
+            results.append(handle_browser(task))
 
-    elif action == "document":
-        return handle_document(task)
+        elif action == "email":
+            results.append(handle_email(task))
 
-    elif action == "schedule":
-        return handle_scheduler(task)
+        elif action == "document":
+            results.append(handle_document(task))
 
-    elif action == "data":
-        return handle_data(task)
+        elif action == "schedule":
+            results.append(handle_scheduler(task))
 
-    elif action == "chat":
-        return task.get("message")
+        elif action == "data":
+            results.append(handle_data(task))
 
-    else:
-        return "Task not recognized."
+        elif action == "chat":
+            results.append(task.get("message"))
+
+    return " ".join(results)
